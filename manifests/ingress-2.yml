@@ -1,0 +1,17 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+    name: "mekubernetis-b4d2"
+    labels:
+        app: "mekubernetis-b4d2"
+    annotations:
+        kubernetes.io/ingress.class: addon-http-application-routing
+spec:
+    rules:
+        - host: mekubernetis9b35-mekubernetis-b4d2.aaa5f0e3b51642c2b1ab.westeurope.aksapp.io
+          http:
+            paths:
+            - path: /
+              backend:
+                serviceName: "mekubernetis-b4d2"
+                servicePort: 80
