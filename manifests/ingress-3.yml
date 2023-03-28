@@ -1,0 +1,17 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+    name: "mekubernetis-c5f8"
+    labels:
+        app: "mekubernetis-c5f8"
+    annotations:
+        kubernetes.io/ingress.class: addon-http-application-routing
+spec:
+    rules:
+        - host: mewebapp-mekubernetis-c5f8.aaa5f0e3b51642c2b1ab.westeurope.aksapp.io
+          http:
+            paths:
+            - path: /
+              backend:
+                serviceName: "mekubernetis-c5f8"
+                servicePort: 80
