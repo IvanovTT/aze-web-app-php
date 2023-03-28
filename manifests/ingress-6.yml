@@ -1,0 +1,17 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+    name: "m5homework-0e2b"
+    labels:
+        app: "m5homework-0e2b"
+    annotations:
+        kubernetes.io/ingress.class: addon-http-application-routing
+spec:
+    rules:
+        - host: m5homework9f14-m5homework-0e2b.be4a4e04b5be42a082de.westeurope.aksapp.io
+          http:
+            paths:
+            - path: /
+              backend:
+                serviceName: "m5homework-0e2b"
+                servicePort: 80
