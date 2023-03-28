@@ -1,0 +1,19 @@
+apiVersion : apps/v1
+kind: Deployment
+metadata:
+  name: "m5homework-0e2b"
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: "m5homework-0e2b"
+  template:
+    metadata:
+      labels:
+        app: "m5homework-0e2b"
+    spec:
+      containers:
+        - name: "m5homework-0e2b"
+          image: "blaaaaaaaa.azurecr.io/m5homework"
+          ports:
+          - containerPort: 80
