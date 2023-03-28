@@ -1,0 +1,64 @@
+on: [push]
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+    
+    - uses: actions/checkout@master
+    
+    - uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+    - name: Create ACR
+      id: create-acr
+      run: |
+        az acr create -n blaaaaaaaa -g blaaaaaaaaadfb-rg --location "West Europe" --sku Basic --admin-enabled
+        echo "::set-output name=acr_username::`az acr credential show -n blaaaaaaaa --query username | xargs`"
+        echo "::set-output name=acr_password::`az acr credential show -n blaaaaaaaa --query passwords[0].value | xargs`"
+        echo "::add-mask::`az acr credential show -n blaaaaaaaa --query passwords[0].value | xargs`"
+
+    - uses: azure/docker-login@v1
+      with:
+        login-server: blaaaaaaaa.azurecr.io
+        username: ${{ steps.create-acr.outputs.acr_username }}
+        password: ${{ steps.create-acr.outputs.acr_password }}
+
+    - name: Build and push image to ACR
+      id: build-image
+      run: |
+        docker build "$GITHUB_WORKSPACE/" -f  "Dockerfile" -t blaaaaaaaa.azurecr.io/m5homework:${{ github.sha }} --label dockerfile-path=Dockerfile
+        docker push blaaaaaaaa.azurecr.io/m5homework:${{ github.sha }}
+    
+    - uses: azure/k8s-set-context@v1
+      id: login
+      with:
+         kubeconfig: ${{ secrets.aks_m5homework_kubeConfig }}
+    
+    - name: Create namespace
+      run: |
+        namespacePresent=`kubectl get namespace | grep m5homework9f14 | wc -l`
+        if [ $namespacePresent -eq 0 ]
+        then
+            echo `kubectl create namespace m5homework9f14`
+        fi
+
+    - uses: azure/k8s-create-secret@v1
+      with:
+        namespace: m5homework9f14
+        container-registry-url: blaaaaaaaa.azurecr.io
+        container-registry-username: ${{ steps.create-acr.outputs.acr_username }}
+        container-registry-password: ${{ steps.create-acr.outputs.acr_password }}
+        secret-name: m5homeworkdockerauth
+       
+    - uses: azure/k8s-deploy@v1.2
+      with:
+        namespace: m5homework9f14
+        manifests: |
+          manifests/deployment-7.yml
+          manifests/service-7.yml
+          manifests/ingress-6.yml
+        images: |
+          blaaaaaaaa.azurecr.io/m5homework:${{ github.sha }}
+        imagepullsecrets: |
+          m5homeworkdockerauth   
