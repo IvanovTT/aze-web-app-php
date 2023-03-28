@@ -1,0 +1,19 @@
+apiVersion : apps/v1
+kind: Deployment
+metadata:
+  name: "mekubernetis-a357"
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: "mekubernetis-a357"
+  template:
+    metadata:
+      labels:
+        app: "mekubernetis-a357"
+    spec:
+      containers:
+        - name: "mekubernetis-a357"
+          image: "jojotest.azurecr.io/mekubernetis"
+          ports:
+          - containerPort: 80
