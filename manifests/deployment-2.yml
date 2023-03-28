@@ -1,0 +1,19 @@
+apiVersion : apps/v1
+kind: Deployment
+metadata:
+  name: "mekubernetis-431f"
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: "mekubernetis-431f"
+  template:
+    metadata:
+      labels:
+        app: "mekubernetis-431f"
+    spec:
+      containers:
+        - name: "mekubernetis-431f"
+          image: "webzahariev.azurecr.io/mekubernetis"
+          ports:
+          - containerPort: 80
