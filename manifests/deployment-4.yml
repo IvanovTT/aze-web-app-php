@@ -1,0 +1,19 @@
+apiVersion : apps/v1
+kind: Deployment
+metadata:
+  name: "mekubernetis-c5f8"
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: "mekubernetis-c5f8"
+  template:
+    metadata:
+      labels:
+        app: "mekubernetis-c5f8"
+    spec:
+      containers:
+        - name: "mekubernetis-c5f8"
+          image: "probanqkoq.azurecr.io/mekubernetis"
+          ports:
+          - containerPort: 80
